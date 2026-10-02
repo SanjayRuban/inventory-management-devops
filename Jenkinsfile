@@ -5,6 +5,7 @@ pipeline {
         DB_HOST = 'localhost'
         DB_NAME = 'inventory_db'
         DB_PORT = '3306'
+        IMAGE_NAME = 'ghcr.io/sanjayruban/inventory-management'
     }
 
     stages {
@@ -36,7 +37,23 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 dir('backend') {
-                    bat 'docker build -t inventory-management:latest .'
+                    bat 'docker build -t %IMAGE_NAME%:latest .'
+                }
+            }
+        }
+
+        stage('Push to GHCR') {
+            steps {
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'ghcr-credentials',
+                        usernameVariable: 'GHCR_USER',
+                        passwordVariable: 'GHCR_TOKEN'
+                    )
+                ]) {
+                    bat 'echo %GHCR_TOKEN% | docker login ghcr.io -u %GHCR_USER% --password-stdin'
+                    bat 'docker push %IMAGE_NAME%:latest'
+                    bat 'docker logout ghcr.io'
                 }
             }
         }
