@@ -9,7 +9,6 @@ describe("Inventory API", () => {
       .get("/health");
 
     expect(response.statusCode).toBe(200);
-
     expect(response.body.status).toBe("UP");
   });
 
@@ -20,7 +19,6 @@ describe("Inventory API", () => {
       .get("/api/products");
 
     expect(response.statusCode).toBe(200);
-
     expect(Array.isArray(response.body)).toBe(true);
   });
 
@@ -38,8 +36,12 @@ describe("Inventory API", () => {
       });
 
     expect(response.statusCode).toBe(201);
-
     expect(response.body.name).toBe("Test Keyboard");
+  });
+
+
+  afterAll(async () => {
+    await require("../db").end();
   });
 
 });
