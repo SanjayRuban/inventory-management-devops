@@ -1,6 +1,12 @@
 pipeline {
     agent any
 
+    environment {
+        DB_HOST = 'localhost'
+        DB_NAME = 'inventory_db'
+        DB_PORT = '3306'
+    }
+
     stages {
 
         stage('Install Dependencies') {
@@ -13,8 +19,16 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                dir('backend') {
-                    bat 'npm test'
+                withCredentials([
+                    usernamePassword(
+                        credentialsId: 'mysql-credentials',
+                        usernameVariable: 'DB_USER',
+                        passwordVariable: 'DB_PASSWORD'
+                    )
+                ]) {
+                    dir('backend') {
+                        bat 'npm test'
+                    }
                 }
             }
         }
