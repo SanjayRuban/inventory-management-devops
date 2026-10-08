@@ -36,9 +36,7 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                dir('backend') {
-                    bat 'docker build -t %IMAGE_NAME%:latest .'
-                }
+                bat 'docker build -t %IMAGE_NAME%:latest .'
             }
         }
 

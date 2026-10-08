@@ -1,13 +1,18 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 require("dotenv").config();
 
 const pool = require("./db");
 
 const app = express();
+const client = require("prom-client");
+
+client.collectDefaultMetrics();
 
 app.use(cors());
 app.use(express.json());
+app.use(express.static(path.join(__dirname, "../frontend")));
 
 // Health check
 app.get("/health", (req, res) => {
@@ -178,6 +183,11 @@ app.delete("/api/products/:id", async (req, res) => {
       message: "Failed to delete product"
     });
   }
+});
+
+app.get("/metrics", async (req, res) => {
+  res.set("Content-Type", client.register.contentType);
+  res.end(await client.register.metrics());
 });
 
 module.exports = app;
