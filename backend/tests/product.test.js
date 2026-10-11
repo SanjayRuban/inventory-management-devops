@@ -3,6 +3,14 @@ const app = require("../app");
 
 describe("Inventory API", () => {
 
+  test("GET / should serve the inventory frontend", async () => {
+    const response = await request(app).get("/");
+
+    expect(response.statusCode).toBe(200);
+    expect(response.headers["content-type"]).toContain("text/html");
+    expect(response.text).toContain("<title>Inventory Management System</title>");
+  });
+
   test("GET /health should return UP", async () => {
 
     const response = await request(app)
