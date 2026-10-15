@@ -8,7 +8,7 @@ describe("Inventory API", () => {
 
     expect(response.statusCode).toBe(200);
     expect(response.headers["content-type"]).toContain("text/html");
-    expect(response.text).toContain("<title>Inventory Management System</title>");
+    expect(response.text).toContain("<title>Inventory Management System-AUTOMATION</title>");
   });
 
   test("GET /health should return UP", async () => {
